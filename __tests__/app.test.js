@@ -3,15 +3,13 @@ const app = require("../app")
 const seed = require("../db/seeds/seed")
 const data = require("../db/data/test-data")
 const db = require("../db/connection")
-// end of requires
-
-
+// end of requires line 6
 
 beforeEach(() => {
     return seed(data);
 });
 
-afterEach(() => {
+afterAll(() => {
     db.end();
 });
 
@@ -29,5 +27,16 @@ describe("GET /api/categories", () =>{
             })
         })
     }) //End of 1st test
+ 
+    test("404 status and message '404 not found' when pass an incorrect URL", () =>{
+        return request(app)
+        .get("/api/categorie")
+        .expect(404)
+        .then(({body})=>{
+            console.log(body)
+            expect(body.msg).toBe("404 not found")
+        })
+    }) //end of 2nd test
+  
 
 }) // Describe GET /api/categories
