@@ -1,6 +1,7 @@
 const {getCategories} = require("./controllers/categories")
 const express = require("express")
 const { rootNotFound, psqlError, error500Status} = require("./errorHandler")
+const { getReviews } = require("./controllers/reviews")
 
 // End of requires
 
@@ -9,6 +10,7 @@ const app = express()
 // Endpoints
 
 app.get("/api/categories", getCategories )
+app.get("/api/reviews", getReviews)
 
 
 // put all endpoints above
