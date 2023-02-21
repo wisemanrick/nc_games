@@ -50,7 +50,8 @@ describe("GET /api/reviews", () =>{
             expect(reviews).toHaveLength(13)
             //console.log(reviews)
             reviews.forEach(category => {
-                //expect(category).toHaveProperty("comment_count", expect.any(Number))
+                expect(category).toHaveProperty("comment_count", expect.any(String))
+                //is above ok as a string??
                 expect(category).toHaveProperty("owner", expect.any(String))
                 expect(category).toHaveProperty("title", expect.any(String))
                 expect(category).toHaveProperty("review_id", expect.any(Number))
