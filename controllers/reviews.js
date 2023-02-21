@@ -1,7 +1,5 @@
 const { fetchReviews } = require("../models/reviews")
 
-
-
 exports.getReviews = (request, response, next) => {
 
     fetchReviews().then((reviews) => {

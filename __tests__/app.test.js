@@ -3,7 +3,8 @@ const app = require("../app")
 const seed = require("../db/seeds/seed")
 const data = require("../db/data/test-data")
 const db = require("../db/connection")
-// end of requires line 6
+//require("jest-sorted") - could not get this to work
+
 
 beforeEach(() => {
     return seed(data);
@@ -26,8 +27,7 @@ describe("GET /api/categories", () =>{
                 expect(category).toHaveProperty("description", expect.any(String))
             })
         })
-    }) //End of 1st test
- 
+    }) 
     test("404 status and message '404 not found' when pass an incorrect URL", () =>{
         return request(app)
         .get("/api/categorie")
@@ -35,11 +35,8 @@ describe("GET /api/categories", () =>{
         .then(({body})=>{
             expect(body.msg).toBe("404 not found")
         })
-    }) //end of 2nd test
-  
-
-}) // Describe GET /api/categories
-
+    })
+})
 describe("GET /api/reviews", () =>{
     test("Should have a length of 4 and 2 properties 'slug' and 'description'", () => {
         return request(app)
@@ -48,10 +45,9 @@ describe("GET /api/reviews", () =>{
         .then(({ body }) => {
             const { reviews } = body
             expect(reviews).toHaveLength(13)
-            //console.log(reviews)
+            
             reviews.forEach(category => {
                 expect(category).toHaveProperty("comment_count", expect.any(String))
-                //is above ok as a string??
                 expect(category).toHaveProperty("owner", expect.any(String))
                 expect(category).toHaveProperty("title", expect.any(String))
                 expect(category).toHaveProperty("review_id", expect.any(Number))
@@ -62,5 +58,37 @@ describe("GET /api/reviews", () =>{
                 expect(category).toHaveProperty("designer", expect.any(String))
             })
         })
-    }) //End of 1st test
-}) // Describe GET /api/reviews"
+    })
+    test("Should return the array in desending order", () => {
+        return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({ body }) => {
+            const { reviews } = body
+            const constclonedReviews = [...reviews]
+            const sortedByReview_id = constclonedReviews.sort((sortA, sortB) => {
+                return sortB.created_at - sortA.created_at
+            })                 
+            expect(reviews[0].created_at).toBe(sortedByReview_id[0].created_at)
+            expect(reviews[12].created_at).toBe(sortedByReview_id[12].created_at)
+        })
+    })           
+    test("Should the correct comment counts for one of the reviews", () => {
+        return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({ body }) => {
+            const { reviews } = body
+            expect(reviews[7].comment_count).toBe("3")
+        })
+    }) 
+    test("404 status and message '404 not found' when pass an incorrect URL", () =>{
+        return request(app)
+        .get("/api/review")
+        .expect(404)
+        .then(({body})=>{
+            expect(body.msg).toBe("404 not found")
+        })
+    })
+})
+

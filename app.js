@@ -16,7 +16,7 @@ app.get("/api/reviews", getReviews)
 // put all endpoints above
 app.all("/*", rootNotFound)
 
-//Rrror handleing
+//Error handleing
 app.use(psqlError)
 
 
