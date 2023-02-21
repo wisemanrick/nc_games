@@ -40,3 +40,103 @@ describe("GET /api/categories", () =>{
   
 
 }) // Describe GET /api/categories
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+describe.skip("GET /api/reviews:review_id", () =>{
+    test.skip("Should have a length of 2 and 2 properties multiple properties", () => {
+        return request(app)
+        .get("/api/reviews:1")
+        .expect(200)
+        .then(({ body }) => {
+            const { reviews } = body
+            expect(reviews).toHaveLength(1)
+                expect(category).toHaveProperty("created_at", expect.any(String))
+                expect(category).toHaveProperty("owner", expect.any(String))
+                expect(category).toHaveProperty("title", expect.any(String))
+                expect(category).toHaveProperty("review_id", expect.any(Number))
+                expect(category).toHaveProperty("category", expect.any(String))
+                expect(category).toHaveProperty("review_img_url", expect.any(String))
+                expect(category).toHaveProperty("review_body", expect.any(String))
+                expect(category).toHaveProperty("votes", expect.any(Number))
+                expect(category).toHaveProperty("designer", expect.any(String))
+            })
+        })
+    })
+    test.skip("Query in correct format (Number) but no a id in the db", () => {
+        return request(app)
+        .get("/api/reviews:100")
+        .expect(404)
+        .then(({ body }) => {
+            const { reviews } = body
+            expect(reviews).toHaveLength(1)
+                expect(category).toHaveProperty("created_at", expect.any(String))
+                expect(category).toHaveProperty("owner", expect.any(String))
+                expect(category).toHaveProperty("title", expect.any(String))
+                expect(category).toHaveProperty("review_id", expect.any(Number))
+                expect(category).toHaveProperty("category", expect.any(String))
+                expect(category).toHaveProperty("review_img_url", expect.any(String))
+                expect(category).toHaveProperty("review_body", expect.any(String))
+                expect(category).toHaveProperty("votes", expect.any(Number))
+                expect(category).toHaveProperty("designer", expect.any(String))
+            })
+        })
+
+
+
+
+
+
+
