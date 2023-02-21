@@ -17,4 +17,7 @@ exports.getReviewById = (request, response, next) => {
     fetchReviewById(review_id).then((review) => {
         response.status(200).send({review})
     })
+    .catch((error) => {
+        next(error)
+    })
 }
