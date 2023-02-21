@@ -3,7 +3,8 @@ const app = require("../app")
 const seed = require("../db/seeds/seed")
 const data = require("../db/data/test-data")
 const db = require("../db/connection")
-// end of requires line 6
+//require("jest-sorted") - could not get this to work
+
 
 beforeEach(() => {
     return seed(data);
@@ -26,111 +27,99 @@ describe("GET /api/categories", () =>{
                 expect(category).toHaveProperty("description", expect.any(String))
             })
         })
-    }) //End of 1st test
- 
+    }) 
     test("404 status and message '404 not found' when pass an incorrect URL", () =>{
         return request(app)
         .get("/api/categorie")
         .expect(404)
         .then(({body})=>{
-            console.log(body)
             expect(body.msg).toBe("404 not found")
         })
-    }) //end of 2nd test
-  
-
-}) // Describe GET /api/categories
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-describe.skip("GET /api/reviews:review_id", () =>{
-    test.skip("Should have a length of 2 and 2 properties multiple properties", () => {
+    })
+})
+describe("GET /api/reviews", () =>{
+    test("Should have a length of 4 and 2 properties 'slug' and 'description'", () => {
         return request(app)
-        .get("/api/reviews:1")
+        .get("/api/reviews")
         .expect(200)
         .then(({ body }) => {
             const { reviews } = body
-            expect(reviews).toHaveLength(1)
-                expect(category).toHaveProperty("created_at", expect.any(String))
+            expect(reviews).toHaveLength(13)
+            
+            reviews.forEach(category => {
+                expect(category).toHaveProperty("comment_count", expect.any(String))
                 expect(category).toHaveProperty("owner", expect.any(String))
                 expect(category).toHaveProperty("title", expect.any(String))
                 expect(category).toHaveProperty("review_id", expect.any(Number))
                 expect(category).toHaveProperty("category", expect.any(String))
                 expect(category).toHaveProperty("review_img_url", expect.any(String))
-                expect(category).toHaveProperty("review_body", expect.any(String))
+                expect(category).toHaveProperty("created_at", expect.any(String))
                 expect(category).toHaveProperty("votes", expect.any(Number))
                 expect(category).toHaveProperty("designer", expect.any(String))
             })
         })
     })
-    test.skip("Query in correct format (Number) but no a id in the db", () => {
+    test("Should return the array in desending order", () => {
+        return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({ body }) => {
+            const { reviews } = body
+            const constclonedReviews = [...reviews]
+            const sortedByReview_id = constclonedReviews.sort((sortA, sortB) => {
+                return sortB.created_at - sortA.created_at
+            })                 
+            expect(reviews[0].created_at).toBe(sortedByReview_id[0].created_at)
+            expect(reviews[12].created_at).toBe(sortedByReview_id[12].created_at)
+        })
+    })           
+    test("Should the correct comment counts for one of the reviews", () => {
+        return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({ body }) => {
+            const { reviews } = body
+            expect(reviews[7].comment_count).toBe("3")
+        })
+    }) 
+    test("404 status and message '404 not found' when pass an incorrect URL", () =>{
+        return request(app)
+        .get("/api/review")
+        .expect(404)
+        .then(({body})=>{
+            expect(body.msg).toBe("404 not found")
+        })
+    })
+})
+
+describe("GET /api/reviews:review_id", () =>{
+    test("Should have a length of 1 and multiple properties", () => {
+        return request(app)
+        .get("/api/reviews/1")
+        .expect(200)
+        .then(({ body }) => {
+            const { review } = body
+                expect(review.rows).toHaveLength(1)
+                expect(review.rows[0]).toHaveProperty("created_at", expect.any(String))
+                expect(review.rows[0]).toHaveProperty("owner", expect.any(String))
+                expect(review.rows[0]).toHaveProperty("title", expect.any(String))
+                expect(review.rows[0]).toHaveProperty("review_id", expect.any(Number))
+                expect(review.rows[0]).toHaveProperty("category", expect.any(String))
+                expect(review.rows[0]).toHaveProperty("review_img_url", expect.any(String))
+                expect(review.rows[0]).toHaveProperty("review_body", expect.any(String))
+                expect(review.rows[0]).toHaveProperty("votes", expect.any(Number))
+                expect(review.rows[0]).toHaveProperty("designer", expect.any(String))
+            })
+        })
+    })
+    test.only("Query in correct format (Number) but no a id in the db", () => {
         return request(app)
         .get("/api/reviews:100")
         .expect(404)
         .then(({ body }) => {
-            const { reviews } = body
-            expect(reviews).toHaveLength(1)
-                expect(category).toHaveProperty("created_at", expect.any(String))
-                expect(category).toHaveProperty("owner", expect.any(String))
-                expect(category).toHaveProperty("title", expect.any(String))
-                expect(category).toHaveProperty("review_id", expect.any(Number))
-                expect(category).toHaveProperty("category", expect.any(String))
-                expect(category).toHaveProperty("review_img_url", expect.any(String))
-                expect(category).toHaveProperty("review_body", expect.any(String))
-                expect(category).toHaveProperty("votes", expect.any(Number))
-                expect(category).toHaveProperty("designer", expect.any(String))
+            const { review } = body
+            
+             
             })
         })
 
