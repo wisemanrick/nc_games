@@ -11,7 +11,7 @@ exports.psqlError = (error, request, response, next) => {
         response.status(404).send({msg :"404 not found"})
     } 
     else if ( error.code === "22P02") {
-        console.log(error.code)
+        
         response.status(400).send({msg :"Bad Request"})
     }
 }

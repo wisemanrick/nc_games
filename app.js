@@ -2,6 +2,8 @@ const {getCategories} = require("./controllers/categories")
 const express = require("express")
 const { rootNotFound, psqlError, error500Status} = require("./errorHandler")
 const { getReviews, getReviewById} = require("./controllers/reviews")
+const { getCommentByReviewId } = require("./controllers/Comments")
+
 
 // End of requires
 
@@ -12,6 +14,7 @@ const app = express()
 app.get("/api/categories", getCategories )
 app.get("/api/reviews", getReviews)
 app.get("/api/reviews/:review_id", getReviewById)
+app.get("/api/reviews/:review_id/comments", getCommentByReviewId )
 
 
 
