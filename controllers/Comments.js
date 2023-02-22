@@ -1,4 +1,4 @@
-const { fetchCommentByReviewId } = require("../models/Comments")
+const { fetchCommentByReviewId, insertCommetByRewiewId } = require("../models/Comments")
 
 
 
@@ -15,3 +15,14 @@ exports.getCommentByReviewId = (request, response, next) => {
     })
 
 } 
+
+exports.postCommentByReviewId = (request, response, next) => {
+    const {review_id} = request.params
+    insertCommetByRewiewId(request.body, review_id).then((comment) => {
+        response.send(201).send({comment})
+    })
+    .catch((error) => {
+        
+        next(error)
+    })
+}

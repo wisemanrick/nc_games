@@ -13,3 +13,18 @@ exports.fetchCommentByReviewId = (review_id) => {
         }
     })
 }
+
+exports.insertCommetByRewiewId = (comment, review_id) =>{
+    const {username, body} = comment
+    // console.log(comment)
+    // console.log(review_id)
+
+    return db
+    .query(
+        `INSERT INTO comments (review_id, author, body) 
+        VALUES ($1, $2, $3) RETURNING *;`, [review_id, username, body]
+    )
+    .then(({rows}) => {
+        return rows[0]
+    })
+}

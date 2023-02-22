@@ -198,6 +198,35 @@ describe("/api/reviews/:review_id/comments", () =>{
             })
         })
 })
+describe("POST /api/reviews/:review_id/comments", () =>{
+    test.only("Test 1", () =>{
+
+        //Arrange
+        const newComment = {username : "dav3rid", 
+        body : "What a game changer !!!!!"}
+        // the user name will be the author
+
+        //Act
+
+        //Assert
+
+        return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then((result) =>{
+            console.log(result)
+            //need to find my returning data
+            expect(body.msg).toEqual({author : "dav3rid", 
+                                        body : "What a game changer !!!!!", 
+                                        comment_id : 7, 
+                                        review_id : 1})
+            //how will you deal with the created_at???
+        })
+    })
+
+    //not a user i.e. rick
+})
     
 
 
