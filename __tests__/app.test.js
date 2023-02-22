@@ -199,7 +199,7 @@ describe("/api/reviews/:review_id/comments", () =>{
         })
 })
 describe("POST /api/reviews/:review_id/comments", () =>{
-    test.only("Test 1", () =>{
+    test.skip("Test 1", () =>{
 
         //Arrange
         const newComment = {username : "dav3rid", 
