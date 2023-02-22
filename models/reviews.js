@@ -11,6 +11,20 @@ exports.fetchReviews = () => {
     })
 }
 
+exports.fetchReviewById = (review_id) => {
+    
+    return db
+    .query(`SELECT * FROM reviews WHERE review_id = $1;`,[review_id]).then((result) => {
+        
+        const rowCount = result.rowCount
+        if ( rowCount === 0) {
+            return Promise.reject("id not found")
+        } else {
+            return result.rows
+        }
+    })
+}
+
 
 
 
