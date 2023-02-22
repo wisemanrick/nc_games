@@ -138,6 +138,66 @@ describe("GET /api/reviews:review_id", () =>{
         })
     })
 })
+describe("/api/reviews/:review_id/comments", () =>{
+    test("Should have a length of 3 and multiple properties", () => {
+        return request(app)
+        .get("/api/reviews/2/comments")
+        .expect(200)
+        .then(({ body }) => {
+            const { comments } = body         
+                expect(comments).toHaveLength(3)
+                expect(comments[0].review_id).toBe(2)
+                comments.forEach(comment => {
+                expect(comment).toHaveProperty("created_at", expect.any(String))
+                expect(comment).toHaveProperty("comment_id", expect.any(Number))
+                expect(comment).toHaveProperty("votes", expect.any(Number))
+                expect(comment).toHaveProperty("review_id", expect.any(Number))
+                expect(comment).toHaveProperty("author", expect.any(String))
+                expect(comment).toHaveProperty("body", expect.any(String))
+                })
+               
+            })
+        })
+        test("comments should be served with the most recent comments first", () => {
+            return request(app)
+            .get("/api/reviews/2/comments")
+            .expect(200)
+            .then(({ body }) => {
+                const { comments } = body
+                const clonedComments = [...comments]
+                const sortedByCreated_At = clonedComments.sort((sortA, sortB) => {
+                    return sortB.created_at - sortA.created_at
+                })               
+                expect(comments[0].created_at).toBe(sortedByCreated_At[0].created_at)
+                expect(comments[2].created_at).toBe(sortedByCreated_At[2].created_at)
+            })
+        })           
+        test("Query in correct format (Number) but no a id in the db", () => {
+            return request(app)
+            .get("/api/reviews/200/comments")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("404 not found")   
+            })
+        })
+        test("Query with wrong format (Not Number) ", () => {
+            return request(app)
+            .get("/api/reviews/two/comments")
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Bad Request")         
+            })
+        
+        })
+        test("404 status and message '404 not found' when pass an incorrect URL", () =>{
+            return request(app)
+            .get("/api/reviews/2/comment")
+            .expect(404)
+            .then(({body})=>{
+                expect(body.msg).toBe("404 not found")
+            })
+        })
+})
     
 
 
