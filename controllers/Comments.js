@@ -19,6 +19,7 @@ exports.getCommentByReviewId = (request, response, next) => {
 exports.postCommentByReviewId = (request, response, next) => {
     const {review_id} = request.params
     insertCommetByRewiewId(request.body, review_id).then((comment) => {
+        console.log(comment)
         response.send(201).send({comment})
     })
     .catch((error) => {

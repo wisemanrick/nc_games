@@ -3,6 +3,7 @@ const app = require("../app")
 const seed = require("../db/seeds/seed")
 const data = require("../db/data/test-data")
 const db = require("../db/connection")
+
 //require("jest-sorted") - could not get this to work
 
 
@@ -199,7 +200,7 @@ describe("/api/reviews/:review_id/comments", () =>{
         })
 })
 describe("POST /api/reviews/:review_id/comments", () =>{
-    test.skip("Test 1", () =>{
+    test.only("Test 1", () =>{
 
         //Arrange
         const newComment = {username : "dav3rid", 
@@ -214,13 +215,14 @@ describe("POST /api/reviews/:review_id/comments", () =>{
         .post("/api/reviews/1/comments")
         .send(newComment)
         .expect(201)
-        .then((result) =>{
-            console.log(result)
+        .then((comment) =>{
+            console.log(comment.body)
+            //console.log(Object.keys(res))
             //need to find my returning data
-            expect(body.msg).toEqual({author : "dav3rid", 
-                                        body : "What a game changer !!!!!", 
-                                        comment_id : 7, 
-                                        review_id : 1})
+            // expect(body.msg).toEqual({author : "dav3rid", 
+            //                             body : "What a game changer !!!!!", 
+            //                             comment_id : 7, 
+            //                             review_id : 1})
             //how will you deal with the created_at???
         })
     })

@@ -25,6 +25,7 @@ exports.insertCommetByRewiewId = (comment, review_id) =>{
         VALUES ($1, $2, $3) RETURNING *;`, [review_id, username, body]
     )
     .then(({rows}) => {
+        //console.log(rows)
         return rows[0]
     })
 }
