@@ -18,6 +18,7 @@ exports.getReviewById = (request, response, next) => {
         response.status(200).send({review})
     })
     .catch((error) => {
+        
         next(error)
     })
 }

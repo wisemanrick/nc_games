@@ -16,8 +16,7 @@ exports.fetchCommentByReviewId = (review_id) => {
 
 exports.insertCommetByRewiewId = (comment, review_id) =>{
     const {username, body} = comment
-    // console.log(comment)
-    // console.log(review_id)
+   
 
     return db
     .query(
@@ -25,7 +24,7 @@ exports.insertCommetByRewiewId = (comment, review_id) =>{
         VALUES ($1, $2, $3) RETURNING *;`, [review_id, username, body]
     )
     .then(({rows}) => {
-        //console.log(rows)
+        
         return rows[0]
     })
 }
