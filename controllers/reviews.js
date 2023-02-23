@@ -30,7 +30,7 @@ exports.patchVoteByReviewId = (request, response, next) =>{
         next(error = "Missing key")
     }
     updateReviewVote(body,review_id).then((review) => {
-        response.status(201).send({review})
+        response.status(200).send({review})
     })
     .catch((error) => {
         

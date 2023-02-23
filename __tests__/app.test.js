@@ -302,7 +302,7 @@ describe("PATCH /api/reviews/:review_id", () => {
             return request(app)
             .patch("/api/reviews/2")
             .send(newVote)
-            .expect(201)
+            .expect(200)
             .then(({body})=>{
                 const {review} = body               
                 expect(review).toHaveProperty("created_at", expect.any(String))
@@ -358,7 +358,7 @@ test("Query with wrong format (Not Number) ", ()=>{
         return request(app)
         .patch("/api/reviews/2")
         .send(newVote)
-        .expect(201)
+        .expect(200)
         .then(({body})=>{
             const {review} = body               
                 expect(review).toHaveProperty("created_at", expect.any(String))
@@ -389,7 +389,7 @@ test("Query with wrong format (Not Number) ", ()=>{
         return request(app)
         .patch("/api/reviews/2")
         .send(newVote)
-        .expect(201)
+        .expect(200)
         .then(({body})=>{
             const {review} = body               
             expect(review).toHaveProperty("created_at", expect.any(String))
