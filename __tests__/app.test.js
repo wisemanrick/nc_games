@@ -3,6 +3,7 @@ const app = require("../app")
 const seed = require("../db/seeds/seed")
 const data = require("../db/data/test-data")
 const db = require("../db/connection")
+
 //require("jest-sorted") - could not get this to work
 
 
@@ -91,7 +92,6 @@ describe("GET /api/reviews", () =>{
         })
     })
 })
-
 describe("GET /api/reviews:review_id", () =>{
     test("Should have a length of 1 and multiple properties", () => {
         return request(app)
@@ -137,6 +137,7 @@ describe("GET /api/reviews:review_id", () =>{
             expect(body.msg).toBe("404 not found")
         })
     })
+    
 })
 describe("/api/reviews/:review_id/comments", () =>{
     test("Should have a length of 3 and multiple properties", () => {
@@ -197,8 +198,104 @@ describe("/api/reviews/:review_id/comments", () =>{
                 expect(body.msg).toBe("404 not found")
             })
         })
+        
 })
+describe("POST /api/reviews/:review_id/comments", () =>{
+    test("when a new comment is posted, its added to the db and the new comment is returned from the db", () =>{
+
+        const newComment = {username : "dav3rid", 
+        body : "What a game changer !!!!!"}
+        return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({body}) =>{
+            expect(body.comment).toEqual({author : "dav3rid", 
+                                        body : "What a game changer !!!!!", 
+                                        comment_id : 7, 
+                                        review_id : 1, 
+                                        votes : 0,
+                                        created_at : expect.any(String)})
+        })
+    })
+    test("Query with wrong format (Not Number) ", () => {
+        const newComment = {username : "dav3rid", 
+        body : "What a game changer !!!!!"}
+        return request(app)
+        .post("/api/reviews/one/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad Request")         
+        }) 
+    })
+    test("404 status and message '404 not found' when pass an incorrect URL", () =>{
+        const newComment = {username : "dav3rid", 
+        body : "What a game changer !!!!!"}
+        return request(app)
+        .post("/api/reviews/2/comment")
+        .send(newComment)
+        .expect(404)
+        .then(({body})=>{
+            expect(body.msg).toBe("404 not found")
+        })
+    }) 
+    test("if passed a user not in the user table", () =>{
+        const newComment = {username : "Rick", 
+        body : "What a game changer !!!!!"}
+        return request(app)
+        .post("/api/reviews/2/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({body})=>{
+            expect(body.msg).toBe("404 not found")
+        })
+    })
+   
+    test("ignores unnessary properties", () =>{
+        const newComment = {username : "dav3rid", 
+        body : "What a game changer !!!!!",
+        dog: "Rodger"}
+        return request(app)
+        .post("/api/reviews/2/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({body})=>{
+            
+            expect(body.comment).toEqual({author : "dav3rid", 
+            body : "What a game changer !!!!!", 
+            comment_id : 7, 
+            review_id : 2, 
+            votes : 0,
+            created_at : expect.any(String)})
+        })
+    })
     
+    test("ignores unnessary properties", () =>{
+        const newComment = {username : "dav3rid", 
+        body : "What a game changer !!!!!",
+        dog: "Rodger"}
+        return request(app)
+        .post("/api/reviews/9999999/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({body})=>{          
+            expect(body.msg).toBe("404 not found")
+        })
+})
+
+test("missing fields i.e. username", () =>{
+    const newComment = { 
+    body : "What a game changer !!!!!"}
+    return request(app)
+    .post("/api/reviews/2/comments")
+    .send(newComment)
+    .expect(400)
+    .then(({body})=>{
+        expect(body.msg).toBe("Bad Request")
+    })
+})
+})
 
 
 
