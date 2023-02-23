@@ -384,7 +384,7 @@ test("Query with wrong format (Not Number) ", ()=>{
             
 })
 })
-   test.only("would decrease votes by 100", ()=>{
+   test("would decrease votes by 100", ()=>{
     const newVote = { inc_votes : -100 }
         return request(app)
         .patch("/api/reviews/2")
