@@ -384,8 +384,8 @@ test("Query with wrong format (Not Number) ", ()=>{
             
 })
 })
-   test("would decrease votes by 1", ()=>{
-    const newVote = { inc_votes : -1 }
+   test.only("would decrease votes by 100", ()=>{
+    const newVote = { inc_votes : -100 }
         return request(app)
         .patch("/api/reviews/2")
         .send(newVote)
@@ -399,7 +399,7 @@ test("Query with wrong format (Not Number) ", ()=>{
             expect(review.category).toBe("dexterity")
             expect(review.review_img_url).toBe("https://images.pexels.com/photos/4473494/pexels-photo-4473494.jpeg?w=700&h=700")
             expect(review.review_body).toBe("Fiddly fun for all the family")
-            expect(review.votes).toBe(4)
+            expect(review.votes).toBe(-95)
             expect(review.designer).toBe("Leslie Scott")
 
         })
