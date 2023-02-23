@@ -1,4 +1,4 @@
-const { fetchReviews, fetchReviewById } = require("../models/reviews")
+const { fetchReviews, fetchReviewById, updateReviewVote } = require("../models/reviews")
 
 exports.getReviews = (request, response, next) => {
 
@@ -16,6 +16,21 @@ exports.getReviewById = (request, response, next) => {
     
     fetchReviewById(review_id).then((review) => {
         response.status(200).send({review})
+    })
+    .catch((error) => {
+        
+        next(error)
+    })
+}
+
+exports.patchVoteByReviewId = (request, response, next) =>{
+    const {review_id} = request.params
+    const {body} = request
+    if(!body.hasOwnProperty("inc_votes")){
+        next(error = "Missing key")
+    }
+    updateReviewVote(body,review_id).then((review) => {
+        response.status(201).send({review})
     })
     .catch((error) => {
         
