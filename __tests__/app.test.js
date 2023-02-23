@@ -271,7 +271,7 @@ describe("POST /api/reviews/:review_id/comments", () =>{
         })
     })
     
-    test("ignores unnessary properties", () =>{
+    test("returns 404 if review_id is out of range", () =>{
         const newComment = {username : "dav3rid", 
         body : "What a game changer !!!!!",
         dog: "Rodger"}
@@ -287,14 +287,123 @@ describe("POST /api/reviews/:review_id/comments", () =>{
 test("missing fields i.e. username", () =>{
     const newComment = { 
     body : "What a game changer !!!!!"}
-    return request(app)
-    .post("/api/reviews/2/comments")
-    .send(newComment)
-    .expect(400)
-    .then(({body})=>{
-        expect(body.msg).toBe("Bad Request")
+        return request(app)
+        .post("/api/reviews/2/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({body})=>{
+            expect(body.msg).toBe("Bad Request")
+        })
     })
 })
+describe("PATCH /api/reviews/:review_id", () => {
+    test("would increment the current review's vote property by 1", ()=>{
+        const newVote = { inc_votes : 1 }
+            return request(app)
+            .patch("/api/reviews/2")
+            .send(newVote)
+            .expect(200)
+            .then(({body})=>{
+                const {review} = body               
+                expect(review).toHaveProperty("created_at", expect.any(String))
+                expect(review.owner).toBe("philippaclaire9")
+                expect(review.title).toBe("Jenga")
+                expect(review.review_id).toBe(2)
+                expect(review.category).toBe("dexterity")
+                expect(review.review_img_url).toBe("https://images.pexels.com/photos/4473494/pexels-photo-4473494.jpeg?w=700&h=700")
+                expect(review.review_body).toBe("Fiddly fun for all the family")
+                expect(review.votes).toBe(6)
+                expect(review.designer).toBe("Leslie Scott")
+
+            })
+})
+test("Query with wrong format (Not Number) ", ()=>{
+    const newVote = { inc_votes : 1 }
+        return request(app)
+        .patch("/api/reviews/two")
+        .send(newVote)
+        .expect(400)
+        .then(({body})=>{
+            expect(body.msg).toBe("Bad Request")                
+            
+        })
+    })
+  
+   test("404 status and message '404 not found' when pass an incorrect URL ", ()=>{
+    const newVote = { inc_votes : 1 }
+        return request(app)
+        .patch("/api/review/2")
+        .send(newVote)
+        .expect(404)
+        .then(({body})=>{
+            expect(body.msg).toBe("404 not found")                
+            
+        })
+    })
+   
+   test("if passed a user not in the user table", ()=>{
+    const newVote = { inc_votes : 1 }
+        return request(app)
+        .patch("/api/review/222222")
+        .send(newVote)
+        .expect(404)
+        .then(({body})=>{
+            expect(body.msg).toBe("404 not found")                
+            
+        })
+    })
+   
+   test("if passed additional properties, they would be ignored", ()=>{
+    const newVote = { inc_votes : 1 , game : "jenga"}
+        return request(app)
+        .patch("/api/reviews/2")
+        .send(newVote)
+        .expect(200)
+        .then(({body})=>{
+            const {review} = body               
+                expect(review).toHaveProperty("created_at", expect.any(String))
+                expect(review.owner).toBe("philippaclaire9")
+                expect(review.title).toBe("Jenga")
+                expect(review.review_id).toBe(2)
+                expect(review.category).toBe("dexterity")
+                expect(review.review_img_url).toBe("https://images.pexels.com/photos/4473494/pexels-photo-4473494.jpeg?w=700&h=700")
+                expect(review.review_body).toBe("Fiddly fun for all the family")
+                expect(review.votes).toBe(6)
+                expect(review.designer).toBe("Leslie Scott")                
+            
+        })
+    })
+   test("missing fields i.e. inc_votes", ()=>{
+    const newVote = { votes : 1 }
+        return request(app)
+        .patch("/api/reviews/2")
+        .send(newVote)
+        .expect(400)
+        .then(({body})=>{
+            expect(body.msg).toBe("Bad Request")                
+            
+})
+})
+   test("would decrease votes by 100", ()=>{
+    const newVote = { inc_votes : -100 }
+        return request(app)
+        .patch("/api/reviews/2")
+        .send(newVote)
+        .expect(200)
+        .then(({body})=>{
+            const {review} = body               
+            expect(review).toHaveProperty("created_at", expect.any(String))
+            expect(review.owner).toBe("philippaclaire9")
+            expect(review.title).toBe("Jenga")
+            expect(review.review_id).toBe(2)
+            expect(review.category).toBe("dexterity")
+            expect(review.review_img_url).toBe("https://images.pexels.com/photos/4473494/pexels-photo-4473494.jpeg?w=700&h=700")
+            expect(review.review_body).toBe("Fiddly fun for all the family")
+            expect(review.votes).toBe(-95)
+            expect(review.designer).toBe("Leslie Scott")
+
+        })
+    })
 })
 
 

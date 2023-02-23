@@ -1,7 +1,7 @@
 const {getCategories} = require("./controllers/categories")
 const express = require("express")
 const { rootNotFound, psqlError, error500Status} = require("./errorHandler")
-const { getReviews, getReviewById} = require("./controllers/reviews")
+const { getReviews, getReviewById,patchVoteByReviewId} = require("./controllers/reviews")
 const { getCommentByReviewId, postCommentByReviewId } = require("./controllers/Comments")
 
 
@@ -19,6 +19,8 @@ app.get("/api/reviews/:review_id", getReviewById)
 app.get("/api/reviews/:review_id/comments", getCommentByReviewId )
 
 app.post("/api/reviews/:review_id/comments", postCommentByReviewId)
+
+app.patch("/api/reviews/:review_id", patchVoteByReviewId)
 
 
 
