@@ -16,6 +16,7 @@ exports.fetchCommentByReviewId = (review_id) => {
 
 exports.insertCommetByRewiewId = (comment, review_id) =>{
     const {username, body} = comment
+    
    
 
     return db

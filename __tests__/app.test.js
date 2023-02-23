@@ -246,14 +246,56 @@ describe("POST /api/reviews/:review_id/comments", () =>{
         return request(app)
         .post("/api/reviews/2/comments")
         .send(newComment)
-        .expect(400)
+        .expect(404)
         .then(({body})=>{
-            expect(body.msg).toBe("Bad Request")
+            expect(body.msg).toBe("404 not found")
         })
     })
-
-})
    
+    test("ignores unnessary properties", () =>{
+        const newComment = {username : "dav3rid", 
+        body : "What a game changer !!!!!",
+        dog: "Rodger"}
+        return request(app)
+        .post("/api/reviews/2/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({body})=>{
+            
+            expect(body.comment).toEqual({author : "dav3rid", 
+            body : "What a game changer !!!!!", 
+            comment_id : 7, 
+            review_id : 2, 
+            votes : 0,
+            created_at : expect.any(String)})
+        })
+    })
+    
+    test("ignores unnessary properties", () =>{
+        const newComment = {username : "dav3rid", 
+        body : "What a game changer !!!!!",
+        dog: "Rodger"}
+        return request(app)
+        .post("/api/reviews/9999999/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({body})=>{          
+            expect(body.msg).toBe("404 not found")
+        })
+})
+
+test("missing fields i.e. username", () =>{
+    const newComment = { 
+    body : "What a game changer !!!!!"}
+    return request(app)
+    .post("/api/reviews/2/comments")
+    .send(newComment)
+    .expect(400)
+    .then(({body})=>{
+        expect(body.msg).toBe("Bad Request")
+    })
+})
+})
 
 
 
