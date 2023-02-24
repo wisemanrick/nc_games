@@ -105,7 +105,7 @@ describe("GET /api/reviews", () =>{
                 expect(category).toHaveProperty("owner", expect.any(String))
                 expect(category).toHaveProperty("title", expect.any(String))
                 expect(category).toHaveProperty("review_id", expect.any(Number))
-                expect(category).toHaveProperty("category", expect.any(String))
+                expect(category.category).toBe("social deduction")
                 expect(category).toHaveProperty("review_img_url", expect.any(String))
                 expect(category).toHaveProperty("created_at", expect.any(String))
                 expect(category).toHaveProperty("votes", expect.any(Number))
