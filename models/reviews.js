@@ -1,4 +1,6 @@
 const db = require("../db/connection")
+const { checkExists } = require("../utils/appUtils")
+
 //Model
 
 exports.fetchReviews = (category, sort_by, order) => {
@@ -28,12 +30,20 @@ exports.fetchReviews = (category, sort_by, order) => {
     .query(queryStr,querySelection)
     .then((result) => {
 
-        const rowCount = result.rowCount
-        if ( rowCount === 0) {
-            return Promise.reject("not found")
+        if (result.rowCount === 0){
+            return checkExists("categories","slug",category)
         } else {
             return result.rows
         }
+
+        
+
+        // const rowCount = result.rowCount
+        // if ( rowCount === 0) {
+        //     return Promise.reject("not found")
+        // } else {
+        //     return result.rows
+        // }
     })
 }
 

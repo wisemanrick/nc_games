@@ -169,7 +169,17 @@ describe("GET /api/reviews", () =>{
                 expect(body.msg).toBe("Bad Request")         
             })
         
-        })                          
+        }) 
+        test("returns 200 and an empty body if category exits but no reviews ", () => {
+            return request(app)
+            .get("/api/reviews?category=children's games")
+            .then(({body}) => {
+                const {reviews } = body
+                expect(reviews).toEqual({})         
+            })
+        
+        })   
+
     })   
 })
 describe("GET /api/reviews:review_id", () =>{

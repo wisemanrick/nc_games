@@ -2,6 +2,7 @@ const { fetchReviews, fetchReviewById, updateReviewVote } = require("../models/r
 
 exports.getReviews = (request, response, next) => {
     const {category, sort_by, order } = request.query
+    
     fetchReviews(category, sort_by, order).then((reviews) => {
         response.status(200).send({ reviews })
     })
