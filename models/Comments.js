@@ -7,7 +7,7 @@ exports.fetchCommentByReviewId = (review_id) => {
       
         const rowCount = result.rowCount
         if ( rowCount === 0) {
-            return Promise.reject("id not found")
+            return Promise.reject("not found")
         } else {
             return result.rows
         }
