@@ -3,6 +3,8 @@ const express = require("express")
 const { rootNotFound, psqlError, error500Status} = require("./errorHandler")
 const { getReviews, getReviewById,patchVoteByReviewId} = require("./controllers/reviews")
 const { getCommentByReviewId, postCommentByReviewId } = require("./controllers/Comments")
+const { getUsers } = require("./controllers/users")
+
 
 
 // End of requires
@@ -17,6 +19,7 @@ app.get("/api/categories", getCategories )
 app.get("/api/reviews", getReviews)
 app.get("/api/reviews/:review_id", getReviewById)
 app.get("/api/reviews/:review_id/comments", getCommentByReviewId )
+app.get("/api/users", getUsers)
 
 app.post("/api/reviews/:review_id/comments", postCommentByReviewId)
 
