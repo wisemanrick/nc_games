@@ -405,7 +405,7 @@ test("Query with wrong format (Not Number) ", ()=>{
         })
     })
 })
-describe.only("GET /api/users", () =>{
+describe("GET /api/users", () =>{
     test("returns all users", () => {
         return request(app)
         .get("/api/users")
@@ -420,7 +420,14 @@ describe.only("GET /api/users", () =>{
             })
         })
     }) 
-    //just this test 404 status and message '404 not found' when pass an incorrect URL
+    test("404 status and message '404 not found' when pass an incorrect URL", () =>{
+        return request(app)
+        .get("/api/user")
+        .expect(404)
+        .then(({body})=>{
+            expect(body.msg).toBe("404 not found")
+        })
+    })
 })
 
 
