@@ -91,6 +91,96 @@ describe("GET /api/reviews", () =>{
             expect(body.msg).toBe("404 not found")
         })
     })
+    describe(" GET /api/reviews (queries) - Feature Enhancement", () => {      
+        test("Should return 11 reviews only for the social deduction category ", () =>{
+            return request(app)
+        .get("/api/reviews?category=social deduction")
+        .expect(200)
+        .then(({ body }) => {
+            const { reviews } = body
+            expect(reviews).toHaveLength(11)
+            
+            reviews.forEach(category => {
+                expect(category).toHaveProperty("comment_count", expect.any(String))
+                expect(category).toHaveProperty("owner", expect.any(String))
+                expect(category).toHaveProperty("title", expect.any(String))
+                expect(category).toHaveProperty("review_id", expect.any(Number))
+                expect(category.category).toBe("social deduction")
+                expect(category).toHaveProperty("review_img_url", expect.any(String))
+                expect(category).toHaveProperty("created_at", expect.any(String))
+                expect(category).toHaveProperty("votes", expect.any(Number))
+                expect(category).toHaveProperty("designer", expect.any(String))
+            })
+        })
+
+        })
+        test("Should return the array in desending order, soted by votes", () => {
+            return request(app)
+            .get("/api/reviews?sort_by=votes")
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body
+                const constclonedReviews = [...reviews]
+                const sortedByVotes= constclonedReviews.sort((sortA, sortB) => {
+                    return sortB.votes - sortA.votes
+                })   
+                //console.log(reviews)              
+                expect(reviews[0].votes).toBe(sortedByVotes[0].votes)
+                expect(reviews[12].votes).toBe(sortedByVotes[12].votes)
+            })
+        })
+        test("Should return the array in ascending order", () => {
+            return request(app)
+            .get("/api/reviews?order=ASC")
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body
+                const constclonedReviews = [...reviews]
+                const sortedByReview_id = constclonedReviews.sort((sortA, sortB) => {
+                    return sortA.created_at - sortB.created_at
+                })                 
+                expect(reviews[0].created_at).toBe(sortedByReview_id[0].created_at)
+                expect(reviews[12].created_at).toBe(sortedByReview_id[12].created_at)
+            })
+        }) 
+        test("returns 404 not found if category is not in the table ", () => {
+            return request(app)
+            .get("/api/reviews?category=social")
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe("404 not found")         
+            })
+        
+        })   
+        test("returns 400 bad request if sort_by is not a valid colum ", () => {
+            return request(app)
+            .get("/api/reviews?sort_by=vote")
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Bad Request")         
+            })
+        
+        })  
+        test("returns 400 bad request if order is not ASC or DESC ", () => {
+            return request(app)
+            .get("/api/reviews?order=vote")
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Bad Request")         
+            })
+        
+        }) 
+        test("returns 200 and an empty body if category exits but no reviews ", () => {
+            return request(app)
+            .get("/api/reviews?category=children's games")
+            .then(({body}) => {
+                const {reviews } = body
+                expect(reviews).toEqual({})         
+            })
+        
+        })   
+
+    })   
 })
 describe("GET /api/reviews:review_id", () =>{
     test("Should have a length of 1 and multiple properties", () => {
