@@ -4,13 +4,14 @@ const { rootNotFound, psqlError, error500Status} = require("./errorHandler")
 const { getReviews, getReviewById,patchVoteByReviewId} = require("./controllers/reviews")
 const { getCommentByReviewId, postCommentByReviewId } = require("./controllers/Comments")
 const { getUsers } = require("./controllers/users")
-
+const cors = require('cors');
 
 
 // End of requires
 
 const app = express()
 
+app.use(cors());
 app.use(express.json())
 
 // Endpoints
